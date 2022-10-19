@@ -1,7 +1,15 @@
 <?php
 
 require 'config/database.php';
+// if ( $_SERVER['REQUEST_METHOD']=='GET' && realpath(__FILE__) == realpath( $_SERVER['SCRIPT_FILENAME'] ) ) {
+// header( 'HTTP/1.0 403 Forbidden', TRUE, 403 );
+// die( header( 'location: /error.php' ) );
+// }
 
+// if ($_SESSION['user_is_admin'] == NULL) {
+//     header('Location: '. ROOT_URL . '/signin.php');
+//     die();
+// }
 ?>
 
 <!DOCTYPE html>

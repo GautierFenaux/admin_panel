@@ -1,5 +1,4 @@
 <?php 
-session_start();
 include 'partials/header.php';
 
 $createpassword = $_SESSION["signup-data"]["createpassword"] ?? null;

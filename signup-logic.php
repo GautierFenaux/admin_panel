@@ -1,5 +1,4 @@
 <?php 
-
 require 'config/database.php';
 
 // get signup form data if signup button was clicked
@@ -26,21 +25,24 @@ if($createpassword !== $confirmpassword) {
 }
 
 
-// $user_check_query = "SELECT * FROM users WHERE username=$username OR email=$email";
-// $user_check_result = mysqli_query($connection, $user_check_query);
+$user_check_query = "SELECT * FROM users WHERE username='$username' OR email='$email'";
+$user_check_result = mysqli_query($connection, $user_check_query);
 
-// if(mysqli_num_rows($user_check_result) > 0) {
-//     $_SESSION["signup"] = "Le pseudo ou l'email existe déjà";
-// }
+if(mysqli_num_rows($user_check_result) > 0) {
+    $_SESSION["signup"] = "Le pseudo ou l'email existe déjà";
+}
 
 
-if($_SESSION["signup"]) {
+if(isset($_SESSION["signup"])) {
     $_SESSION['signup-data'] = $_POST;
      header('location:'. ROOT_URL . 'signup.php');
     die();
 } else {
+
     $insert_user_query = "INSERT INTO users (firstname, lastname, username, email, password, is_admin) 
-    VALUE ($firstname, $lastname, $email, $hashed_password, 0";
+    VALUES ('$firstname', '$lastname', '$username', '$email', '$hashed_password', 0)";
+    
+    $insert_user_result = mysqli_query($connection, $insert_user_query);
 
     if(!mysqli_errno($connection)) {
         //redirect with success message

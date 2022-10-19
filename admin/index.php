@@ -1,4 +1,8 @@
+
+
+
+
 <?php include 'partials/header.php'; ?>
 
-<div>index</div>
+<div>index admin</div>
 <?php include '../partials/footer.php' ; ?>

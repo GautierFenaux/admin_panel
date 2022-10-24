@@ -6,10 +6,10 @@ require 'config/database.php';
 // die( header( 'location: /error.php' ) );
 // }
 
-// if ($_SESSION['user_is_admin'] == NULL) {
-//     header('Location: '. ROOT_URL . '/signin.php');
-//     die();
-// }
+if ($_SESSION['user_is_admin'] == NULL) {
+    header('Location: '. ROOT_URL . '/signin.php');
+    die();
+}
 ?>
 
 <!DOCTYPE html>

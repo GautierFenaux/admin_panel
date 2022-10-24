@@ -1,9 +1,19 @@
 <?php
 require 'config/database.php';
+require_once __DIR__ . '/lib/SecurityService.php';
+
 
 if (isset($_POST["submit"])) {
+
     $post = filter_input_array(INPUT_POST, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     extract($post);
+
+    $antiCSRF = new \Phppot\SecurityService\securityService();
+    $csrfResponse = $antiCSRF->validate();
+    if (empty($csrfResponse)) {
+        $message = "Security alert: Unable to process your request.";
+        $type = "error";
+    }
 
     if (!$username_email) {
         $_SESSION['signin'] = "Username or Email required";
@@ -24,6 +34,7 @@ if (isset($_POST["submit"])) {
                 // set session for access control
                 $_SESSION['user-id'] = $user_record['id'];
                 // set session if user is an admin
+                
                 if ($user_record['is_admin'] == 1) {
                     $_SESSION['user_is_admin'] = true;
                     header('location: ' . ROOT_URL . 'admin/');
@@ -38,6 +49,9 @@ if (isset($_POST["submit"])) {
             $_SESSION['signin'] = 'User not found';
         }
     }
+   
+
+
 
     // if any problem, redirect back to signin page with login data
 

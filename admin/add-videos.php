@@ -1,7 +1,10 @@
 <?php
 
 require_once './partials/header.php';
-include_once './fetch-videos.php';
+require_once './fetch-videos.php';
+require_once __DIR__ . '../../lib/SecurityService.php';
+
+use Phppot\SecurityService\securityService as antiCsrf;
 
 ?>
 
@@ -62,10 +65,10 @@ include_once './fetch-videos.php';
 
 <!-- Trigger/Open The Modal -->
 <?php if (isset($_SESSION['user_is_admin'])) : ?>
-    <button id="myBtn">Ajouter une vidéo</button>
+    <button class="modalButton">Ajouter une vidéo</button>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
+    <div id="postModal" class="modal">
 
         <!-- Modal content -->
         <div class="modal-content">
@@ -80,6 +83,11 @@ include_once './fetch-videos.php';
 
                 <input type="submit" name="submit" value="envoyer">
 
+                <?php
+                    $antiCSRF = new antiCsrf();
+                    $antiCSRF->insertHiddenToken();
+                ?>
+
             </form>
         </div>
 
@@ -93,9 +101,35 @@ include_once './fetch-videos.php';
     <video width="320" height="240" controls>
         <source src="<?= $fetch['source'] ?>" data-id="<?= $fetch['id'] ?>">
     </video>
+
     <?php if (isset($_SESSION['user_is_admin'])) : ?>
-        <button><a href="delete-video.php?video_id=<?= $fetch['id'] ?>&source=<?= $fetch['source'] ?>">Supprimer</button>
-        <button type="submit" name="update" value="modifier"> </button>
+        <button class="modalButton">Supprimer une vidéo</button>
+
+
+        <div id="deleteModal" class="modal">
+        
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form action="delete-video.php" method="POST" enctype="multipart/form-data">
+                
+                    <label for="delete">Etes-vous sur de vouloir supprimer cette vidéo ?</label>
+
+                    <input hidden type="text" name="video-id" value=<?= $fetch['id'] ?> /> <br><br>
+                    <input hidden type="text" name="video-source" value=<?= $fetch['source'] ?>/> <br><br>
+
+                    <input type="submit" name="submit" value="envoyer">
+
+                    <?php
+                    $antiCSRF = new antiCsrf();
+                    $antiCSRF->insertHiddenToken();
+                    ?>
+
+                </form>
+            </div>
+
+        </div>
+
     <?php endif ?>
 
 <?php } ?>
@@ -109,32 +143,43 @@ include_once './fetch-videos.php';
 
 
 
+
+
+
 <script>
-    // Get the modal
-    var modal = document.getElementById("myModal");
-
     // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
+    var btn = document.querySelectorAll(".modalButton");
+    // All page modals
+    var modals = document.getElementsByClassName('modal');
     // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+    var spans = document.getElementsByClassName("close");
 
-    // When the user clicks the button, open the modal 
-    btn.onclick = function() {
-        modal.style.display = "block";
+    for (let i = 0; i < btn.length; i++) {
+        btn[i].onclick = function(e) {
+            e.preventDefault();
+            console.log(modals[i]);
+            modals[i].style.display = "block";
+        }
     }
 
     // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
+    for (let i = 0; i < spans.length; i++) {
+        spans[i].onclick = function() {
+            for (var index in modals) {
+                if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
+            }
+        }
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        if (event.target.classList.contains('modal')) {
+            for (let index in modals) {
+                if (typeof modals[index].style !== 'undefined') modals[index].style.display = "none";
+            }
         }
     }
+
 </script>
 
 <?php

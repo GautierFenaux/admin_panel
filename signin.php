@@ -1,6 +1,8 @@
 <?php 
 
 include 'partials/header.php';
+require_once __DIR__ . './lib/SecurityService.php';
+use Phppot\SecurityService\securityService as antiCsrf;
 
 $username_email = $_SESSION['signin-data']['username_email'] ?? null;
 $password = $_SESSION['signin-data']['password'] ?? null;
@@ -27,6 +29,11 @@ unset($_SESSION['signin-data']);
     <input type="password" name="password" value="<?= $password ?>" name="password" placeholder="enter password"> <br><br>
    
     <input type="submit" name="submit" value="envoyer">
+
+    <?php 
+        $antiCSRF = new antiCsrf();
+        $antiCSRF->insertHiddenToken(); 
+    ?>
 
     <small>Don't have an account ? <a href="signin.php">Sign up</a></small>
 

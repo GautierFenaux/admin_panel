@@ -2,7 +2,7 @@
 require './config/database.php';
 
 
-date_default_timezone_set('Asia/Manila');
+date_default_timezone_set('Europe/Paris');
 
 if (isset($_POST["submit"])) {
 
@@ -25,11 +25,11 @@ if (isset($_POST["submit"])) {
                 header('location: ' . ROOT_URL . '/admin/add-videos.php');
             }
         } else {
-            echo "<script>alert('Wrong video format')</script>";
-            echo "<script>window.location = 'index.php'</script>";
+            echo "<script>alert('Mauvais format de vidéo')</script>";
+            header('location: ' . ROOT_URL . '/admin/add-videos.php');
         }
     } else {
-        echo "<script>alert('File too large to upload')</script>";
-        echo "<script>window.location = 'index.php'</script>";
+        echo "<script>alert('Vidéo trop longue !')</script>";
+        header('location: ' . ROOT_URL . '/admin/add-videos.php');
     }
 }
